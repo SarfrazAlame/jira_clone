@@ -7,11 +7,11 @@ import React from "react";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 
-const SignInCard = () => {
+const SignUpCard = () => {
   return (
     <Card className="w-full h-full md:w-[487px] border-none shadow-none">
       <CardHeader className="flex items-center justify-center text-center p-7">
-        <CardTitle className="text-2xl">Welcome back!</CardTitle>
+        <CardTitle className="text-2xl">Sign Up</CardTitle>
       </CardHeader>
       <div className="px-7 mb-2">
         <DottedSeparator />
@@ -63,4 +63,4 @@ const SignInCard = () => {
   );
 };
 
-export default SignInCard;
+export default SignUpCard;
