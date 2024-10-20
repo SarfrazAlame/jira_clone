@@ -22,7 +22,6 @@ import { loginSchema } from "../schemas";
 import { useLogin } from "../api/use-login";
 
 const SignInCard = () => {
-  
   const { mutate } = useLogin();
 
   const form = useForm<z.infer<typeof loginSchema>>({
@@ -34,7 +33,7 @@ const SignInCard = () => {
   });
 
   const handleSumbit = (data: z.infer<typeof loginSchema>) => {
-    console.log({ data });
+    mutate(data);
   };
 
   return (
@@ -88,6 +87,7 @@ const SignInCard = () => {
             />
 
             <Button
+              type="submit"
               disabled={false}
               variant={"destructive"}
               size={"lg"}
