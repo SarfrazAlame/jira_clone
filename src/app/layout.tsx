@@ -4,7 +4,7 @@ import localFont from "next/font/local";
 import { cn } from "@/lib/utils";
 
 import "./globals.css";
-
+import { QueryProviders } from "@/components/query-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,10 +20,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={cn(inter.className, "antialiased min-h-screen")}
-      >
-        {children}
+      <body className={cn(inter.className, "antialiased min-h-screen")}>
+        <QueryProviders>{children}</QueryProviders>
       </body>
     </html>
   );
