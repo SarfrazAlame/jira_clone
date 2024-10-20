@@ -18,22 +18,22 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import Link from "next/link";
-
-const formSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(6, "Minimum 6 characters").max(256),
-});
+import { loginSchema } from "../schemas";
+import { useLogin } from "../api/use-login";
 
 const SignInCard = () => {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  
+  const { mutate } = useLogin();
+
+  const form = useForm<z.infer<typeof loginSchema>>({
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  const handleSumbit = (data: z.infer<typeof formSchema>) => {
+  const handleSumbit = (data: z.infer<typeof loginSchema>) => {
     console.log({ data });
   };
 
