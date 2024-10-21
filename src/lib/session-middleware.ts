@@ -28,7 +28,7 @@ type AdditionalContext = {
 }
 
 
-export const sessionMiddleware = createMiddleware(
+export const sessionMiddleware = createMiddleware<AdditionalContext>(
     async (c, next) => {
         const client = new Client()
             .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT!)
@@ -37,7 +37,7 @@ export const sessionMiddleware = createMiddleware(
         const session = getCookie(c, AUTH_COOKIE)
 
         if (!session) {
-            return c.json({ error: "Unauthorized" }, 401)
+            return c.json({ error: "Unauthorizeds" }, 401)
         }
 
         client.setSession(session)
@@ -52,6 +52,8 @@ export const sessionMiddleware = createMiddleware(
         c.set("storage", storage)
         c.set("databases", databases)
         c.set("user", user)
+
+        await next()
 
     }
 )
