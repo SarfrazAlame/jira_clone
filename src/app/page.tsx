@@ -1,13 +1,12 @@
-"use client";
-
-import { Button } from "@/components/ui/button";
-import { useCurrent } from "@/features/auth/api/use-current";
-import { useLogout } from "@/features/auth/api/use-logout";
+import { protect } from "@/features/auth/actions";
 import { UserButton } from "@/features/auth/components/user-button";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { redirect } from "next/navigation";
 
-export default function Home() {
+export default async function Home() {
+  const user = await protect();
+
+  if (!user) redirect("/sign-in");
+
   return (
     <div>
       <UserButton />
