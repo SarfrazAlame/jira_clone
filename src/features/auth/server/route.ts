@@ -3,16 +3,28 @@ import { zValidator } from "@hono/zod-validator";
 import { loginSchema, registerSchema } from "../schemas";
 import { createAdminClient } from "@/lib/appwrite";
 import { ID } from "node-appwrite";
-import { setCookie } from "hono/cookie";
+import { deleteCookie, setCookie } from "hono/cookie";
 import { AUTH_COOKIE } from "../contant";
+import { sessionMiddleware } from "@/lib/session-middleware";
 
 const app = new Hono()
     .post('/login',
         zValidator("json", loginSchema),
-        (c) => {
+        async (c) => {
             const { email, password } = c.req.valid("json")
-            console.log({ email, password })
-            return c.json({ success: "ok" })
+
+            const { account } = await createAdminClient()
+            const session = await account.createEmailPasswordSession(email, password)
+
+            setCookie(c, AUTH_COOKIE, session.secret, {
+                path: '/',
+                httpOnly: true,
+                secure: true,
+                sameSite: 'strict',
+                maxAge: 60 * 60 * 24 * 30,
+            })
+
+            return c.json({ success: true })
         })
     .post('/register',
         zValidator("json", registerSchema),
@@ -20,13 +32,13 @@ const app = new Hono()
             const { name, email, password } = c.req.valid("json")
 
             const { account } = await createAdminClient()
-            const user = await account.create(
+
+            await account.create(
                 ID.unique(),
                 email,
                 password,
                 name
             )
-
             const session = await account.createEmailPasswordSession(
                 email,
                 password
@@ -43,5 +55,10 @@ const app = new Hono()
             return c.json({ success: true })
         }
     )
+    .post('/logout', sessionMiddleware, (c) => {
+        deleteCookie(c, AUTH_COOKIE)
+
+        return c.json({ success: true })
+    })
 
 export default app
