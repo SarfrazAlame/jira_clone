@@ -1,4 +1,4 @@
-import { Sidebar } from "lucide-react";
+import { Sidebar } from "@/components/Sidebar";
 import React from "react";
 
 interface DashboadLayoutProps {
@@ -10,7 +10,7 @@ const DashboadLayout = ({ children }: DashboadLayoutProps) => {
     <div className="min-h-screen">
       <div className="flex w-full h-full">
         <div className="fixed left-0 top-0 hidden lg:block lg:w-[264px] h-full overflow-auto">
-          <Sidebar />
+          <Sidebar/>
         </div>
         <div className="lg:pl-[264px]">
           <div className="mx-auto max-w-screen-2xl h-full">
