@@ -14,4 +14,3 @@ export const POST = handle(routes)
 
 export type AppType = typeof routes
 
-

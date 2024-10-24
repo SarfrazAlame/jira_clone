@@ -11,3 +11,7 @@ export const registerSchema = z.object({
     email: z.string().email(),
     password: z.string().min(6, "Minimum 6 characters required"),
 })
+
+export const createWorkspaceSchema = z.object({
+    name:z.string().min(3)
+})
