@@ -5,7 +5,14 @@ import { sessionMiddleware } from "@/lib/session-middleware";
 import { DATABASE_ID, WORKSPACE_ID } from "@/config";
 import { ID } from "node-appwrite";
 
-const app = new Hono().post(
+const app = new Hono()
+  .get("/workspace", 
+     sessionMiddleware,
+     async(c)=>{
+      const worksapces = c.get('')
+     }
+  )
+  .post(
   "/",
   zValidator("json", createWorkspaceSchema),
   sessionMiddleware,
@@ -21,6 +28,7 @@ const app = new Hono().post(
       ID.unique(),
       {
         name,
+        userId: user.$id,
       }
     );
 
