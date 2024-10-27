@@ -2,12 +2,23 @@ import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { createWorkspaceSchema } from "../schemas";
 import { sessionMiddleware } from "@/lib/session-middleware";
-import { DATABASE_ID, IMAGES_ID, WORKSPACE_ID } from "@/config";
-import { ID } from "node-appwrite";
+import { DATABASE_ID, IMAGES_ID, MEMBERS_ID, WORKSPACE_ID } from "@/config";
+import { ID, Query } from "node-appwrite";
+import { MemberRole } from "@/features/members/type";
 
 const app = new Hono()
   .get("/", sessionMiddleware, async (c) => {
+    const user = c.get("user");
     const databses = c.get("databases");
+
+    const members = await databses.listDocuments(DATABASE_ID, MEMBERS_ID, [
+      Query.equal("userId", user.$id),
+    ]);
+
+    if (members.total === 0) {
+      return c.json({ data: { documents: [], total: 0 } });
+    }
+
     const workspace = await databses.listDocuments(DATABASE_ID, WORKSPACE_ID);
     return c.json({ data: workspace });
   })
@@ -44,6 +55,12 @@ const app = new Hono()
           userId: user.$id,
         }
       );
+
+      await database.createDocument(DATABASE_ID, MEMBERS_ID, ID.unique(), {
+        userId: user.$id,
+        workspaceId: workspace.$id,
+        role: MemberRole.ADMIN,
+      });
 
       return c.json({ data: workspace });
     }
